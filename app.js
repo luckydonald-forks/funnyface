@@ -78,9 +78,12 @@ module.exports = function(app) {
       }
       var stencil = req.query.template
       lib.applyStencil(src, stencil, function(err, fileName) {
-        if (err) {
-          res.status(400).json({ ok: false, message: err})
+        if (err && _.isString(err)) {
+          res.status(400).json({ ok: false, message: err })
         } else {
+          if(_.isFinite(err)) {
+            res.status(err)
+          }
           res.sendFile(fileName, function(err) {
             lib.nukeFile(src, function(err, msg) {})
             lib.nukeFile(fileName, function(err, msg) {})
@@ -118,9 +121,12 @@ module.exports = function(app) {
         }
       ],
       function(err, result) {
-        if (err) {
+        if (err && _.isString(err)) {
           res.status(400).json({ ok: false, message: err })
         } else {
+          if(_.isFinite(err)) {
+            res.status(err)
+          }
           res.sendFile(result, function(err){
             lib.nukeFile(src, function(err, msg) {});
             lib.nukeFile(result, function(err, msg) {});

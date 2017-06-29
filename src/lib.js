@@ -99,7 +99,7 @@ module.exports = function(){
         },
         function(faces, callback) {
           if (faces.length == 0) {
-            return callback(null, dst)
+            return callback(200, dst)
           }
           var command = []
           var outputFileName = temp.path({suffix: '.jpg'});
@@ -125,7 +125,7 @@ module.exports = function(){
             if (err) {
               return callback('Error processing file')
             }
-            return callback(null, outputFileName)
+            return callback(201, outputFileName)
           })
         }
       ], cb); //end waterfall
