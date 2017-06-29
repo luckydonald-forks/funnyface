@@ -93,11 +93,12 @@ module.exports = function(app) {
   app.get('/api/v1/image', function(req, res, next){
     var stencil = req.query.template
     var url = req.query.url
+    var force_mime = req.query.force_mime
     var src = ""
     async.waterfall(
       [
         function(callback) {
-          lib.downloadImage(url, function(err, fileName) {
+          lib.downloadImage(url, force_mime, function(err, fileName) {
             if (err) {
               return callback(err)
             } else {

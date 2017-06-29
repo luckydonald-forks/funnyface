@@ -35,7 +35,7 @@ module.exports = function(){
     }
   }
 
-  lib.downloadImage = function(url, cb) {
+  lib.downloadImage = function(url, force_mime, cb) {
     var urlTest = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(url);
     if (! urlTest) {
       return cb('Error: invalid image URL')
@@ -45,10 +45,18 @@ module.exports = function(){
       return cb("There was an error downloading the image: " + err)
     })
     r.on('response', function(response){
-      if (response.statusCode != 200 || !_.includes(['image/jpeg','image/png','image/gif'], response.headers['content-type'])) {
+      var content_type = response.headers['content-type'];
+      if (content_type == 'application/octet-stream') {
+        content_type = force_mime;
+      }
+      if (
+          response.statusCode < 200 ||
+          response.statusCode >= 300 || 
+          !_.includes(['image/jpeg','image/png','image/gif'], content_type)
+      ) {
         return cb("Error: Image not found or unsupported image type.")
       }
-      var imgPath = temp.path({suffix: lib.exts[response.headers['content-type']]})
+      var imgPath = temp.path({suffix: lib.exts[content_type]})
       r.pipe(stream = fs.createWriteStream(imgPath))
       stream.on('finish', function(){
         return cb(null, imgPath)

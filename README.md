@@ -33,7 +33,7 @@ Upon success, you'll open up ```/tmp/barack-stache.jpg``` and get back something
 
 | Endpoint | Description | Query String Parameters | Form Parameters | Example |
 | ---- | ---- | ---- | ---- | ---- |
-| GET /api/v1/image | Attempts face detection and applies template image to each face | **url**: url to source image<br>**template**: (optional) template image to apply to face (see GET /api/v1/templates) | N/A |```curl -o /tmp/output.jpg https://funnyface.neufeldtech.com/api/v1/image?template=helmet&url=https://raw.githubusercontent.com/neufeldtech/funnyface/master/docs/img/barack.jpg``` |
+| GET /api/v1/image | Attempts face detection and applies template image to each face | **url**: url to source image<br>**template**: (optional) template image to apply to face (see GET /api/v1/templates)<br>**force_mime**: (optional) in case of the URL being a download (content type `application/octet-stream`), you can force the mime type | N/A |```curl -o /tmp/output.jpg https://funnyface.neufeldtech.com/api/v1/image?template=helmet&url=https://raw.githubusercontent.com/neufeldtech/funnyface/master/docs/img/barack.jpg``` |
 | POST /api/v1/image | Attempts face detection and applies template image to each face | **template**: (optional) template image to apply to face (see GET /api/v1/templates) | **file**: Image to upload (jpg, png, or gif) | ```curl -F file=@docs/img/barack.jpg -o /tmp/barack-stache.jpg "https://funnyface.neufeldtech.com/api/v1/image?template=moustache"```|
 | GET /api/v1/templates | Returns list of known templates | N/A | N/A | ```curl https://funnyface.neufeldtech.com/api/v1/templates``` |
 | GET /api/v1/help | Returns link to this help doc| N/A | N/A | ```curl https://funnyface.neufeldtech.com/api/v1/help``` |
