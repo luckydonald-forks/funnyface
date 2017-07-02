@@ -113,7 +113,7 @@ module.exports = function(app) {
         function(fileName, callback) {
           lib.applyStencil(fileName, stencil, function(err, finalFilename) {
             if (err) {
-              return callback(err)
+              return callback(err, finalFilename)
             } else {
               return callback(null, finalFilename)
             }
